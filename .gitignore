@@ -1,0 +1,44 @@
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+*.swp
+*.swo
+
+# Java / JVM
+*.class
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+**/target/
+.mvn/timing.properties
+
+# Build outputs (generic)
+out/
+bin/
+build/
+
+# Archives
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+logs/
+**/logs/
+
+# Environment files
+.env
+.env.*
+
+
