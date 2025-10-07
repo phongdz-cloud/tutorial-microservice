@@ -9,5 +9,5 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 security:
   jwt:
-    secret-base64: "REPLACE_WITH_256BIT_BASE64_SECRET"
+    secret-base64: "2OhDTRAUQm3JIQ5oqDQJ7A5+wlkN63Wm2WeN8hLLhZY="
     ttl-seconds: 3600

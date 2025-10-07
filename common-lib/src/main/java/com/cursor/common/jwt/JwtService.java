@@ -1,6 +1,7 @@
 package com.cursor.common.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -24,14 +25,14 @@ public class JwtService {
 
     public String generateToken(String userId, List<String> roles, Map<String, Object> extraClaims) {
         Instant now = Instant.now();
-        Jwts.builder()
-            .setSubject(userId)
-            .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plusSeconds(accessTtlSeconds)));
+        JwtBuilder jwtBuilder = Jwts.builder()
+                .setSubject(userId)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(accessTtlSeconds)));
         if (extraClaims != null) {
             extraClaims.forEach((k, v) -> Jwts.builder().claim(k, v));
         }
-        return Jwts.builder()
+        return jwtBuilder
             .claim("roles", roles)
             .signWith(signingKey, SignatureAlgorithm.HS256)
             .compact();
