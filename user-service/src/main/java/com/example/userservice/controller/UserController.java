@@ -1,11 +1,11 @@
 package com.example.userservice.controller;
 
 import com.cursor.common.dto.BaseResponse;
-import com.cursor.common.dto.PageResponse;
 import com.cursor.common.enum_.StatusEnum;
-import com.cursor.common.util.PaginationUtil;
+import com.cursor.common.pagination.PageResponse;
+import com.cursor.common.pagination.PageUtils;
 import com.example.userservice.dto.UserRequest;
-import com.example.userservice.dto.UserResponse;
+import com.example.userservice.dto.UserDto;
 import com.example.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,10 +49,10 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Validation error or conflict", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponse.class)))
     })
     @PostMapping
-    public BaseResponse<UserResponse> create(
+    public BaseResponse<UserDto> create(
             @Parameter(description = "User information", required = true) @Valid @RequestBody UserRequest request) {
-        UserResponse response = userService.create(request);
-        return BaseResponse.<UserResponse>builder()
+        UserDto response = userService.create(request);
+        return BaseResponse.<UserDto>builder()
                 .status(StatusEnum.SUCCESS)
                 .code("SUCCESS")
                 .message("User created")
@@ -67,10 +66,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
-    public BaseResponse<UserResponse> getById(
+    public BaseResponse<UserDto> getById(
             @Parameter(description = "User ID", required = true, example = "1") @PathVariable Long id) {
-        UserResponse response = userService.getById(id);
-        return BaseResponse.<UserResponse>builder()
+        UserDto response = userService.getById(id);
+        return BaseResponse.<UserDto>builder()
                 .status(StatusEnum.SUCCESS)
                 .code("SUCCESS")
                 .message("OK")
@@ -83,11 +82,14 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Users retrieved successfully")
     })
     @GetMapping
-    public BaseResponse<PageResponse<UserResponse>> list(
-            @Parameter(description = "Pagination parameters") Pageable pageable) {
-        Page<UserResponse> page = userService.list(pageable);
-        PageResponse<UserResponse> pageResponse = PaginationUtil.toPageResponse(page);
-        return BaseResponse.<PageResponse<UserResponse>>builder()
+    public BaseResponse<PageResponse<UserDto>> list(
+            @Parameter(description = "page", example = "1") @RequestParam(required = false) Integer page,
+            @Parameter(description = "size", example = "10") @RequestParam(required = false) Integer size,
+            @Parameter(description = "sortBy") @RequestParam(required = false) String sortBy,
+            @Parameter(description = "direction") @RequestParam(required = false) String direction) {
+        Pageable pageable = PageUtils.buildPageable(page, size, sortBy, direction);
+        PageResponse<UserDto> pageResponse = userService.list(pageable);
+        return BaseResponse.<PageResponse<UserDto>>builder()
                 .status(StatusEnum.SUCCESS)
                 .code("SUCCESS")
                 .message("OK")
@@ -102,11 +104,11 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Validation error or conflict")
     })
     @PutMapping("/{id}")
-    public BaseResponse<UserResponse> update(
+    public BaseResponse<UserDto> update(
             @Parameter(description = "User ID", required = true, example = "1") @PathVariable Long id,
             @Parameter(description = "Updated user information", required = true) @Valid @RequestBody UserRequest request) {
-        UserResponse response = userService.update(id, request);
-        return BaseResponse.<UserResponse>builder()
+        UserDto response = userService.update(id, request);
+        return BaseResponse.<UserDto>builder()
                 .status(StatusEnum.SUCCESS)
                 .code("SUCCESS")
                 .message("User updated")

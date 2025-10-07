@@ -2,6 +2,7 @@ package com.example.userservice.service.impl;
 
 import com.cursor.common.exception.BusinessException;
 import com.cursor.common.exception.ErrorCode;
+import com.cursor.common.pagination.PageResponse;
 import com.example.userservice.dto.RoleDto;
 import com.example.userservice.dto.RoleRequest;
 import com.example.userservice.entity.Role;
@@ -11,6 +12,8 @@ import com.example.userservice.service.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +68,12 @@ public class RoleServiceImpl implements RoleService {
                 () -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Role not found")
         );
         roleRepository.delete(role);
+    }
+
+    @Override
+    public PageResponse<RoleDto> getAll(Pageable pageable) {
+        Page<RoleDto> page = roleRepository.findAll(pageable).map(roleMapper::toDto);
+        return PageResponse.from(page);
     }
 
 }

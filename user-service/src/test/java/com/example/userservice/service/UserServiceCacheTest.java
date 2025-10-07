@@ -1,7 +1,7 @@
 package com.example.userservice.service;
 
+import com.example.userservice.dto.UserDto;
 import com.example.userservice.dto.UserRequest;
-import com.example.userservice.dto.UserResponse;
 import com.example.userservice.entity.User;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.service.impl.UserServiceImpl;
@@ -62,10 +62,10 @@ class UserServiceCacheTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
 
         // When - First call
-        UserResponse result1 = userService.getById(1L);
+        UserDto result1 = userService.getById(1L);
 
         // When - Second call (should use cache)
-        UserResponse result2 = userService.getById(1L);
+        UserDto result2 = userService.getById(1L);
 
         // Then
         assertNotNull(result1);
@@ -85,7 +85,7 @@ class UserServiceCacheTest {
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
         // When
-        UserResponse result = userService.create(testUserRequest);
+        UserDto result = userService.create(testUserRequest);
 
         // Then
         assertNotNull(result);
@@ -102,7 +102,7 @@ class UserServiceCacheTest {
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
         // When
-        UserResponse result = userService.update(1L, testUserRequest);
+        UserDto result = userService.update(1L, testUserRequest);
 
         // Then
         assertNotNull(result);
