@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  user-db:
+    image: postgres:15
+    container_name: user-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    networks:
+      - app-net
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+      - ./docker/init/user-db:/docker-entrypoint-initdb.d
+
+networks:
+  app-net:
+    name: cursor_app_net
+
+volumes:
+  user-db-data:
+    name: user-db-data
