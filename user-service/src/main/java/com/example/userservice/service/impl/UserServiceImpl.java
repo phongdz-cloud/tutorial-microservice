@@ -6,6 +6,8 @@ import com.example.userservice.dto.UserRequest;
 import com.example.userservice.dto.UserResponse;
 import com.example.userservice.entity.User;
 import com.example.userservice.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class UserServiceImpl implements com.example.userservice.service.UserServ
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "users", key = "#id")
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
@@ -52,6 +55,7 @@ public class UserServiceImpl implements com.example.userservice.service.UserServ
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public UserResponse update(Long id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
@@ -74,6 +78,7 @@ public class UserServiceImpl implements com.example.userservice.service.UserServ
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void delete(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));

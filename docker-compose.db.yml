@@ -17,6 +17,18 @@ services:
       - user-db-data:/var/lib/postgresql/data
       - ./docker/init/user-db:/docker-entrypoint-initdb.d
 
+  redis:
+    image: redis:7-alpine
+    container_name: user-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-net
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
 networks:
   app-net:
     name: cursor_app_net
@@ -24,3 +36,5 @@ networks:
 volumes:
   user-db-data:
     name: user-db-data
+  redis-data:
+    name: redis-data
