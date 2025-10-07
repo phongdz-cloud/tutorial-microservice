@@ -13,6 +13,10 @@ spring:
               uri: lb://user-service
               predicates:
                 - Path=/**
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/auth/**
           discovery:
             locator:
               lower-case-service-id: true
@@ -39,11 +43,14 @@ springdoc:
       - name: "User Service"
         url: "/user-service/v3/api-docs"
         display-name: "User Service API"
+      - name: "Auth Service"
+        url: "/auth-service/v3/api-docs"
+        display-name: "Auth Service API"
       - name: "Gateway"
         url: "/v3/api-docs"
         display-name: "API Gateway"
     url: "/v3/api-docs"
-  show-actuator: true
+  show-actuator: false
 
 # Logging for debugging
 logging:
