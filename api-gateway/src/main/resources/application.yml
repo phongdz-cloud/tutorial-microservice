@@ -50,6 +50,7 @@ springdoc:
         url: "/v3/api-docs"
         display-name: "API Gateway"
     url: "/v3/api-docs"
+    persist-authorization: true
   show-actuator: false
 
 # Logging for debugging
@@ -65,3 +66,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+# jWT
+security:
+  jwt:
+    secret-base64: "2OhDTRAUQm3JIQ5oqDQJ7A5+wlkN63Wm2WeN8hLLhZY="

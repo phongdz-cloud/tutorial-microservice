@@ -38,6 +38,16 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -60,6 +60,7 @@ springdoc:
     display-operation-id: true
     default-models-expand-depth: 1
     default-model-expand-depth: 1
+    persist-authorization: true
   show-actuator: true
   group-configs:
     - group: "user-service"
