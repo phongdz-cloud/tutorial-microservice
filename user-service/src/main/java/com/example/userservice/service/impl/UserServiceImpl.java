@@ -6,6 +6,8 @@ import com.example.userservice.dto.UserRequest;
 import com.example.userservice.dto.UserResponse;
 import com.example.userservice.entity.User;
 import com.example.userservice.repository.UserRepository;
+import com.example.userservice.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -15,13 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class UserServiceImpl implements com.example.userservice.service.UserService {
+@AllArgsConstructor
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public UserResponse create(UserRequest request) {

@@ -1,9 +1,11 @@
 package com.example.userservice.dto;
 
 import com.example.userservice.entity.User;
+import lombok.Data;
 
 import java.time.Instant;
 
+@Data
 public class UserResponse {
     private Long id;
     private String username;
@@ -23,51 +25,4 @@ public class UserResponse {
         return r;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public User.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(User.Status status) {
-        this.status = status;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

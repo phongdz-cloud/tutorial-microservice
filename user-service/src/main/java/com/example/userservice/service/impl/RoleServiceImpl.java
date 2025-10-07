@@ -1,0 +1,70 @@
+package com.example.userservice.service.impl;
+
+import com.cursor.common.exception.BusinessException;
+import com.cursor.common.exception.ErrorCode;
+import com.example.userservice.dto.RoleDto;
+import com.example.userservice.dto.RoleRequest;
+import com.example.userservice.entity.Role;
+import com.example.userservice.mapper.RoleMapper;
+import com.example.userservice.repository.RoleRepository;
+import com.example.userservice.service.RoleService;
+import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@AllArgsConstructor
+@Transactional
+public class RoleServiceImpl implements RoleService {
+
+    private final RoleRepository roleRepository;
+
+    private final RoleMapper roleMapper;
+
+    @Override
+    public RoleDto createRole(RoleRequest roleRequest) {
+
+        roleRepository.findByName(roleRequest.getName()).ifPresent(role -> {
+            throw new BusinessException(ErrorCode.CONFLICT, "Role name already exists");
+        });
+
+        Role role = roleMapper.toEntity(roleRequest);
+        roleRepository.save(role);
+
+        return roleMapper.toDto(role);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "roles", key = "#id")
+    public RoleDto getById(Long id) {
+        Role role = roleRepository.findById(id).orElseThrow(
+                () -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Role not found")
+        );
+        return roleMapper.toDto(role);
+    }
+
+    @Override
+    @CacheEvict(value = "roles", key = "#id")
+    public RoleDto updateRole(Long id,RoleRequest roleRequest) {
+        Role role = roleRepository.findById(id).orElseThrow(
+                () -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Role not found")
+        );
+        role.setName(roleRequest.getName());
+        Role roleUpdated = roleRepository.save(role);
+        return roleMapper.toDto(roleUpdated);
+    }
+
+    @Override
+    @CacheEvict(value = "roles", key = "#id")
+    public void delete(Long id) {
+        Role role = roleRepository.findById(id).orElseThrow(
+                () -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Role not found")
+        );
+        roleRepository.delete(role);
+    }
+
+}
