@@ -1,7 +1,7 @@
 package com.example.userservice.controller;
 
+import com.cursor.common.dto.UserResponse;
 import com.example.userservice.dto.LoginRequest;
-import com.example.userservice.dto.UserDto;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,11 @@ public class UserInternalController {
     private final UserService userService;
 
     @PostMapping("/validate")
-    public UserDto validate(@RequestBody LoginRequest loginRequest) {
-        return null;
+    public UserResponse validate(@RequestBody LoginRequest loginRequest) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(1L);
+        userResponse.setUsername(loginRequest.getUsername());
+        userResponse.setPassword(loginRequest.getPassword());
+        return userResponse;
     }
 }

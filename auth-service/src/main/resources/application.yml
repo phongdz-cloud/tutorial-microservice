@@ -25,7 +25,23 @@ feign:
   hystrix:
     enabled: true
 
+# Resilience4j configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      user-service:
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+  retry:
+    instances:
+      user-service:
+        max-attempts: 3
+        wait-duration: 1s
+
 logging:
   level:
     com.example.authservice.client: DEBUG
     feign: DEBUG
+    io.github.resilience4j: DEBUG
