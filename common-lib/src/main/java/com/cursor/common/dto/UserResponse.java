@@ -17,6 +17,6 @@ public class UserResponse {
 
     private String email;
 
-    private String password;
+    private int status;
 
 }

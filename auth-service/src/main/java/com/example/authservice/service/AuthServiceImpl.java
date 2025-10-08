@@ -10,6 +10,8 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryRegistry;
 import lombok.RequiredArgsConstructor;
+import org.apache.hc.client5.http.auth.InvalidCredentialsException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Supplier;
@@ -27,11 +29,18 @@ public class AuthServiceImpl implements AuthService {
     private final RetryRegistry retryRegistry;
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) throws InvalidCredentialsException {
         UserResponse userResponse = this.validateUser(loginRequest);
+
+        if (userResponse.getStatus() == HttpStatus.UNAUTHORIZED.value()) {
+            throw new InvalidCredentialsException("Invalid username or password");
+        }
+
+        String token = jwtService.generateToken(String.valueOf(userResponse.getId()),
+                null, null);
         return new LoginResponse(
-                "token",
-                0L
+                token,
+                3600L
         );
     }
 

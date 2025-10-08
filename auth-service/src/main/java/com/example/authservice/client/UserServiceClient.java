@@ -13,4 +13,5 @@ public interface UserServiceClient {
 
     @PostMapping("/validate")
     UserResponse validateUser(@RequestBody LoginRequest userRequest);
+
 }

@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
                 0L,
                 "Service Unavailable",
                 "service@unavailable.com",
-                "unknow"
+                HttpStatus.UNAUTHORIZED.value()
         );
         BaseResponse<UserResponse> fallbackUserResponse = BaseResponse.<UserResponse>builder()
                 .status(StatusEnum.ERROR)

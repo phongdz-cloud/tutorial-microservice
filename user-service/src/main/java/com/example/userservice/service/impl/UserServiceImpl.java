@@ -1,8 +1,10 @@
 package com.example.userservice.service.impl;
 
+import com.cursor.common.dto.UserResponse;
 import com.cursor.common.exception.BusinessException;
 import com.cursor.common.exception.ErrorCode;
 import com.cursor.common.pagination.PageResponse;
+import com.example.userservice.dto.LoginRequest;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.dto.UserRequest;
 import com.example.userservice.entity.User;
@@ -14,6 +16,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     private final UserMapper userMapper;
 
@@ -85,5 +91,19 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "User not found"));
         user.setStatus(User.Status.INACTIVE);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserResponse validateUser(LoginRequest loginRequest) {
+        UserResponse unauthenticated = new UserResponse();
+        unauthenticated.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return userRepository.findByUsername(loginRequest.getUsername())
+                .map(user -> {
+                    boolean valid = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+                    if(valid) {
+                        return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), HttpStatus.OK.value());
+                    }
+                    return unauthenticated;
+                }).orElse(unauthenticated);
     }
 }
