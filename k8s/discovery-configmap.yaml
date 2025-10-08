@@ -1,0 +1,36 @@
+# k8s/discovery-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: discovery-config
+  namespace: microservices
+data:
+  application.yml: |
+    server:
+      port: 8761
+
+    spring:
+      application:
+        name: discovery-server
+
+    eureka:
+      instance:
+        hostname: eureka-service
+        prefer-ip-address: true
+      client:
+        register-with-eureka: false
+        fetch-registry: false
+        service-url:
+          defaultZone: http://eureka-service:8761/eureka/
+      server:
+        enable-self-preservation: false
+        eviction-interval-timer-in-ms: 10000
+
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,info,metrics
+      endpoint:
+        health:
+          show-details: always
