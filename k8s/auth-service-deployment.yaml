@@ -16,17 +16,17 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: auth-service:latest
-          imagePullPolicy: IfNotPresent
+          image: phonghh/auth-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "250m"
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              memory: "1Gi"
               cpu: "500m"
+              memory: "512Mi"
           env:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://eureka-service:8761/eureka/"

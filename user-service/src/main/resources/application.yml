@@ -10,7 +10,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/userdb
+    url: jdbc:postgresql://localhost:5432/userdb
     username: user
     password: password
     driver-class-name: org.postgresql.Driver
@@ -81,3 +81,9 @@ management:
   endpoint:
     health:
       show-details: always
+      probes:
+        enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true

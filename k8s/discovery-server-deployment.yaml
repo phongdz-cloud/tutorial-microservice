@@ -18,17 +18,17 @@ spec:
     spec:
       containers:
         - name: discovery-server
-          image: discovery-server:latest
-          imagePullPolicy: IfNotPresent
+          image: phonghh/discovery-server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8761
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "250m"
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              memory: "1Gi"
               cpu: "500m"
+              memory: "512Mi"
           env:
             # - name: SPRING_PROFILES_ACTIVE
             #   value: "k8s"

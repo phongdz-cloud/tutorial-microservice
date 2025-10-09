@@ -16,17 +16,17 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: user-service:latest
-          imagePullPolicy: IfNotPresent
+          image: phonghh/user-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "250m"
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              memory: "1Gi"
               cpu: "500m"
+              memory: "512Mi"
           env:
             # - name: SPRING_PROFILES_ACTIVE
             #   value: "k8s"
@@ -54,13 +54,13 @@ spec:
             httpGet:
               path: /actuator/health
               port: 8081
-            initialDelaySeconds: 30
+            initialDelaySeconds: 70
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health
               port: 8081
-            initialDelaySeconds: 30
+            initialDelaySeconds: 70
             periodSeconds: 10
 ---
 apiVersion: v1
