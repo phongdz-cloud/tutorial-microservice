@@ -69,15 +69,27 @@ springdoc:
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
+  pattern:
+    level: "%5p [traceId=%X{traceId} spanId=%X{spanId} reqId=%X{X-Request-Id}]"
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    enabled: true
+  otlp:
+    tracing:
+      endpoint: http://tempo-distributor.monitoring.svc:4317
 
 # jWT
 security:

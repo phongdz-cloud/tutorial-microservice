@@ -1,7 +1,5 @@
 package com.example.authservice.controller;
 
-import com.cursor.common.dto.BaseResponse;
-import com.cursor.common.enum_.StatusEnum;
 import com.example.authservice.dto.LoginRequest;
 import com.example.authservice.dto.LoginResponse;
 import com.example.authservice.service.AuthService;
@@ -31,7 +29,7 @@ public class AuthController {
 
     @Operation(summary = "User Login", description = "API User Login")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponse.class), examples = @ExampleObject(value = """
+            @ApiResponse(responseCode = "200", description = "Login successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class), examples = @ExampleObject(value = """
                     {
                         "status": "SUCCESS",
                         "code": "SUCCESS",
@@ -41,7 +39,7 @@ public class AuthController {
                             "ttl": 3600
                         }
                     }"""))),
-            @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponse.class)))
+            @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class)))
     })
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest req) throws InvalidCredentialsException {

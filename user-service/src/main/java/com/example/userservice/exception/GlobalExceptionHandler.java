@@ -1,10 +1,9 @@
 package com.example.userservice.exception;
 
-import com.cursor.common.dto.BaseResponse;
-import com.cursor.common.enum_.StatusEnum;
 import com.cursor.common.exception.BusinessException;
-import com.cursor.common.exception.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,39 +11,29 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<Void> handleBusiness(BusinessException ex) {
-        return BaseResponse.<Void>builder()
-                .status(StatusEnum.ERROR)
-                .code(ex.getErrorCode().name())
-                .message(ex.getMessage())
-                .build();
+    public ResponseEntity<Void> handleBusiness(BusinessException ex) {
+        return ResponseEntity.badRequest().build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<Void> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .findFirst()
                 .map(FieldError::getDefaultMessage)
                 .orElse("Validation error");
-        return BaseResponse.<Void>builder()
-                .status(StatusEnum.ERROR)
-                .code(ErrorCode.VALIDATION_ERROR.name())
-                .message(message)
-                .build();
+        return ResponseEntity.badRequest().body(message);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public BaseResponse<Void> handleUnknown(Exception ex) {
-        return BaseResponse.<Void>builder()
-                .status(StatusEnum.ERROR)
-                .code(ErrorCode.UNKNOWN_ERROR.name())
-                .message("Unexpected error")
-                .build();
+    public ResponseEntity<Void> handleUnknown(Exception ex) {
+        log.error("Unknown exception: {}", ex.getMessage());
+        return ResponseEntity.internalServerError().build();
     }
 }

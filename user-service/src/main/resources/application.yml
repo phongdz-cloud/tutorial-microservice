@@ -53,6 +53,9 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: "${spring.application.name}:${spring.application.instance_id:${random.value}}"
+logging:
+  pattern:
+    level: "%5p [traceId=%X{traceId} spanId=%X{spanId} reqId=%X{X-Request-Id}]"
 
 # Swagger/OpenAPI Configuration
 springdoc:
@@ -83,7 +86,16 @@ management:
       show-details: always
       probes:
         enabled: true
-  prometheus:
-    metrics:
-      export:
-        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    enabled: true
+  otlp:
+    tracing:
+      endpoint: http://tempo-distributor.monitoring.svc:4317

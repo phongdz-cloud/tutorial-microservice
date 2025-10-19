@@ -15,14 +15,23 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: always
-  prometheus:
-    metrics:
-      export:
-        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    enabled: true
+  otlp:
+    tracing:
+      endpoint: http://tempo-distributor.monitoring.svc:4317
 
 # Security JWT
 security:
@@ -61,3 +70,5 @@ logging:
     com.example.authservice.client: DEBUG
     feign: DEBUG
     io.github.resilience4j: DEBUG
+  pattern:
+    level: "%5p [traceId=%X{traceId} spanId=%X{spanId} reqId=%X{X-Request-Id}]"
