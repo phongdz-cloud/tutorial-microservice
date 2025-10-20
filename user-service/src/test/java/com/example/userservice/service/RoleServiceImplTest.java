@@ -1,5 +1,12 @@
 package com.example.userservice.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.cursor.common.exception.BusinessException;
 import com.cursor.common.exception.ErrorCode;
 import com.cursor.common.pagination.PageResponse;
@@ -9,27 +16,30 @@ import com.example.userservice.entity.Role;
 import com.example.userservice.mapper.RoleMapper;
 import com.example.userservice.repository.RoleRepository;
 import com.example.userservice.service.impl.RoleServiceImpl;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
-import java.util.Optional;
+@ExtendWith(MockitoExtension.class)
+class RoleServiceImplTest {
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-public class RoleServiceImplTest {
-
+    @Mock
     private RoleRepository roleRepository;
 
+    @Mock
     private RoleMapper roleMapper;
 
-    private RoleService roleService;
+    @InjectMocks
+    private RoleServiceImpl roleService;
 
     private RoleRequest req;
 
@@ -52,11 +62,6 @@ public class RoleServiceImplTest {
         testRoleDto = new RoleDto();
         testRoleDto.setId(1L);
         testRoleDto.setName(name);
-
-
-        roleRepository = Mockito.mock(RoleRepository.class);
-        roleMapper = Mockito.mock(RoleMapper.class);
-        roleService = new RoleServiceImpl(roleRepository, roleMapper);
     }
 
     @Test
@@ -72,7 +77,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void createSuccess() {
+    void create_success() {
         testRole.setId(null);
 
         // Given
@@ -91,7 +96,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void getById() {
+    void getById_success() {
         // GIVEN
         Long id = 1L;
 
@@ -119,7 +124,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void updateRoleById() {
+    void updateRole_success() {
 
         // GIVEN
         Long id = 1L;
@@ -144,7 +149,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void updateRoleById_sameRoleName() {
+    void updateRole_sameRoleName_success() {
         // GIVEN
         Long id = 1L;
         RoleRequest roleRequest = new RoleRequest();
@@ -163,7 +168,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void updateRoleById_notFoundName() {
+    void updateRole_uniqueName_success() {
         // GIVEN
         Long id = 1L;
         RoleRequest roleRequest = new RoleRequest();
@@ -184,7 +189,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void updateRoleById_existsRoleName() {
+    void updateRole_existingName_conflict() {
         // GIVEN
         Long id = 1L;
         RoleRequest roleRequest = new RoleRequest();
@@ -206,7 +211,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void updateRole_NotFoundId() {
+    void updateRole_notFoundId() {
         Long id = 1L;
 
         when(roleRepository.findById(id)).thenReturn(Optional.empty());
@@ -216,7 +221,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void deleteRole() {
+    void deleteRole_success() {
         // GIVEN
         Long id = 1L;
         when(roleRepository.findById(id)).thenReturn(Optional.of(testRole));
@@ -229,7 +234,7 @@ public class RoleServiceImplTest {
     }
 
     @Test
-    void deleteRole_NotFoundId() {
+    void deleteRole_notFoundId() {
         // GIVEN
         Long id = 1L;
         when(roleRepository.findById(id)).thenReturn(Optional.empty());
